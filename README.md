@@ -1,2 +1,2 @@
-# Zatts2
-zatts chat application
+# ZATSSS
+Creating the one and only ZATSSS application
