@@ -154,6 +154,7 @@ class ResponsiveDrawer extends React.Component {
         ]
 
         firebase.database().ref('channels/'+ChannelID.toString()).set({
+            ChannelID: ChannelID.toString(),
             channelname: newChannel.val,
             description: '',
             members: sampleMembers,
@@ -208,8 +209,10 @@ class ResponsiveDrawer extends React.Component {
            let obj;
            console.log(channelArr);
            for(obj in channelArr){
-             console.log(channelArr[obj].channelname);
-             channel.push(channelArr[obj].channelname);
+             let obj1  = {};
+             obj1.id = obj
+             obj1.channelname = channelArr[obj].channelname;
+             channel.push(obj1)
            }
            this.setState({channels: channel});
            console.log("console from component mount: ",channel);
@@ -327,6 +330,47 @@ class ResponsiveDrawer extends React.Component {
 
    }
 
+   hello1 = (id) => {
+
+     for(let i =0; i< this.state.channels.length; i++){
+        if(this.state.channels[i].id == id){
+          this.state.chatUserName = this.state.channels[i].channelname
+          console.log(this.state.chatUserName);
+        }
+     }
+
+     this.setState({
+        chatUserName :this.state.chatUserName
+     })
+   
+   }
+
+   
+  handleEvent = (term) => {
+    let flag =0;
+    for(let k=0;k<this.state.users.length;k++){
+      if(term == this.state.users[k].name && flag==0){
+        flag = 1 ;
+      }
+    }
+
+    if(flag ==1){
+      for(let j=0;j<this.state.channels.length;j++){
+        if(this.state.clicked == this.state.channels[j].name){
+          this.state.channels[j].members.push(term)
+        }
+      }
+    }
+
+    this.setState({
+      channels : this.state.channels,
+    })
+     // this.state.searchTerm = term;
+     // this.setState({searchTerm: term});
+     // console.log("inside  "+this.state.searchTerm);
+     // this.addUsers();
+   }
+
    handleChatSubmit(){
 
       console.log('handle submit');
@@ -371,9 +415,10 @@ class ResponsiveDrawer extends React.Component {
     })
 
     let Channel = this.state.channels.map( (item) => {
+         
           return (
                 <ListItem button>
-                    <ListItemText primary={item}
+                    <ListItemText onClick={()=>this.hello1(item.id)} primary={item.channelname}
                       style={{float:"left", color: '#ffffff', fontSize: '18px', marginLeft: '10px' }} />
                       
                 </ListItem> )
